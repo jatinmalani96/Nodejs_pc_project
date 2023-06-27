@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Focus - Bootstrap Admin Dashboard </title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="./images/favicon.png">
+    <!-- Custom Stylesheet -->
+    <link href="./css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader">
+        <div class="sk-three-bounce">
+            <div class="sk-child sk-bounce1"></div>
+            <div class="sk-child sk-bounce2"></div>
+            <div class="sk-child sk-bounce3"></div>
+        </div>
+    </div>
+    <!--*******************
+        Preloader end
+    ********************-->
+{{>adminheader_sidebar}}
+
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+   
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+      
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+      
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+     
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+            <div class="container-fluid">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 p-md-0">
+                        <div class="welcome-text">
+                            <h4>Hi, welcome !</h4>
+                           
+                        </div>
+                    </div>
+                  
+                </div>
+                <!-- row -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Add Product</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="basic-form">
+                                    <form action="update_product" method="post" enctype="multipart/form-data">
+                                    <input type="text" name="" id="" value="{{proddata._id}}">
+                                        <div class="form-group col-md-6">
+                                                <label>Product Name</label>
+                                                <input type="text" class="form-control" placeholder="Enter Product Name"  name="pname" value="{{proddata.pname}}">
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                                <label>Product Price</label>
+                                                <input type="text" class="form-control" placeholder="Enter Product Price" name="price" value="{{proddata.price}}">
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                                <label>Qty</label>
+                                                <input type="text" class="form-control" placeholder="Enter Product Qty" name="qty" value="{{proddata.qty}}">
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                                <label>Select Category</label>
+                                                <select name="catid" id="" class="form-control">
+                                                    {{#each catdata}}
+                                                    <option value="{{this._id}}"> {{this.catname}}</option>
+                                                    {{/each}}
+
+                                                </select>
+                                               
+                                        </div>
+
+                                        <div class="form-group col-md-6">
+                                                <label>Select Images</label>
+                                                <input type="file" class="form-control" placeholder="Enter Product Qty" name="img">
+                                        </div>
+
+                                    
+
+                                        <div class="form-group col-md-6">
+                                                <button type="submit" class="btn btn-primary">Add Product</button>
+                                             </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+
+                <div class="row">                   
+                
+                   <div class="col-lg-12">
+                        <div class="card">
+                            
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table primary-table-bordered">
+                                        <thead class="thead-primary">
+                                            <tr>
+                                                <th scope="col">Categoty</th>
+                                                <th scope="col">Product</th>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">Qty</th>
+                                                <th scope="col">Image</th>
+                                                <th scope="col">Delete Product</th>
+                                                <th scope="col">Edit Product</th>
+                                              
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {{#each pdata}}
+                                            <tr>                              
+                                                <td class="text-dark">{{this.catid}}</td>
+                                                <td class="text-dark">{{this.pname}}</td>
+                                                <td class="text-dark">{{this.price}}</td>
+                                                <td class="text-dark">{{this.qty}}</td>
+                                                <td class="" ><img width="40" height="40" src="productimg/{{this.img}}" alt=""></td>
+                                                {{!-- <td class="text-dark">{{this.img}}</td>                                           --}}
+                                                <td><a href="delete_product?pid={{this._id}}"><button type="button" class="btn btn-danger">Delete</button></a></td>
+                                                <td><a href="edit_category?pid={{this._id}}"><button type="button" class="btn btn-primary">Edit</button></a></td>
+                                            </tr>
+                                            {{/each}}
+                                        </tbody>                                        
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+                 
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+
+
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed &amp; Developed by <a href="#" target="_blank">Quixkit</a> 2019</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+        <!--**********************************
+           Support ticket button start
+        ***********************************-->
+
+        <!--**********************************
+           Support ticket button end
+        ***********************************-->
+
+        
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <!-- Required vendors -->
+    <script src="./vendor/global/global.min.js"></script>
+    <script src="./js/quixnav-init.js"></script>
+    <script src="./js/custom.min.js"></script>
+    
+
+
+
+</body>
+
+</html>
