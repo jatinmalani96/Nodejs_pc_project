@@ -8,9 +8,8 @@ const cartSchema = new mongoose.Schema({
         type : mongoose.Schema.Types.ObjectId
     },
     price  : {
-        Number
+        type : Number
     },
-
     qty  : {
         type : Number
     },

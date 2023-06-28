@@ -29,7 +29,26 @@
 	<link rel="stylesheet" href="css/ion.rangeSlider.css" />
 	<link rel="stylesheet" href="css/ion.rangeSlider.skinFlat.css" />
 	<link rel="stylesheet" href="css/main.css">
+
+
+	<script>
+		function addcart(pid)
+		{
+			// alert(pid)
+			$.get("add_cart",{pid},function(rt){
+				alertr(rt)
+			})
+		}
+
+
+
+
+	</script>
+
+
+
 </head>
+
 
 <body>
 
@@ -48,21 +67,19 @@
 				<div class="col-lg-6">
 					<div class="s_Product_carousel">
 						<div class="single-prd-item">
-							<img class="img-fluid" src="img/category/s-p1.jpg" alt="">
+							<img class="img-fluid" src="productimg/{{prodata.img}}" alt="">
 						</div>
 						<div class="single-prd-item">
-							<img class="img-fluid" src="img/category/s-p1.jpg" alt="">
+							<img class="img-fluid" src="productimg/{{prodata.img}}" alt="">
 						</div>
-						<div class="single-prd-item">
-							<img class="img-fluid" src="img/category/s-p1.jpg" alt="">
-						</div>
+						
 					</div>
-				</div>
+				</div>	
 				<div class="col-lg-5 offset-lg-1">
 					
 					<div class="s_product_text">
-						<h3>Faded SkyBlu Denim Jeans</h3>
-						<h2>$149.99</h2>
+						<h3>{{prodata.pname}}</h3>
+						<h2>Rs. {{prodata.price}}</h2>
 						<ul class="list">
 							<li><a class="active" href="#"><span>Category</span> : Household</a></li>
 							<li><a href="#"><span>Availibility</span> : In Stock</a></li>
@@ -79,7 +96,7 @@
 							 class="reduced items-count" type="button"><i class="lnr lnr-chevron-down"></i></button>
 						</div>
 						<div class="card_area d-flex align-items-center">
-							<a class="primary-btn" href="#">Add to Cart</a>
+							<button onclick="addcart('{{prodata._id}}')" type="button" class="primary-btn">Add to Cart</button>
 							<a class="icon_btn" href="#"><i class="lnr lnr lnr-diamond"></i></a>
 							<a class="icon_btn" href="#"><i class="lnr lnr lnr-heart"></i></a>
 						</div>

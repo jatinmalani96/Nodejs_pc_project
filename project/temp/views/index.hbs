@@ -30,6 +30,21 @@
 	<link rel="stylesheet" href="css/ion.rangeSlider.skinFlat.css" />
 	<link rel="stylesheet" href="css/magnific-popup.css">
 	<link rel="stylesheet" href="css/main.css">
+
+	<script>
+		function addcart(pid)
+		{
+			// alert(pid)
+			$.get("add_cart",{pid},function(rt){
+				alertr(rt)
+			})
+		}
+
+
+
+
+	</script>
+
 </head>
 
 <body>
@@ -113,9 +128,9 @@
 					
 					<!-- single product -->
 					{{#each prodata}}
-					<div class="col-lg-3 col-md-6">						
-						<div class="single-product">
-							<a href="/single-product"><img class="img-fluid" src="productimg/{{this.img}}" alt=""></a>
+					<div class="col-lg-3 col-md-6" >						
+						<div class="single-product" >
+							<a href="/single-product?pid={{this._id}}"><img class="img-fluid"  src="productimg/{{this.img}}" alt=""></a>
 							
 							<div class="product-details">
 								<a href="/single-product"><h6>{{this.pname}}</h6></a>
@@ -123,10 +138,7 @@
 									<h6>Rs : {{this.price}}</h6>									
 								</div>
 								<div class="prd-bottom">
-									<a href="add_cart?pid={{this._id}}" class="social-info">
-										<span class="ti-bag"></span>
-										<p class="hover-text">add to bag</p>
-									</a>																											
+									<button onclick="addcart('{{this._id}}')" type="button" class="btn btn-outline-info  ti-bag hover-text">add to bag</button>																																				
 								</div>
 							</div>
 						</div>						

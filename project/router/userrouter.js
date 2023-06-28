@@ -90,9 +90,12 @@ router.get("/confirmation",(req,resp)=>{
 })
 
 router.get("/single-product",async(req,resp)=>{
-    try {
-        const prodata = await Product.find()
-        resp.render("single-product",{prodata:prodata})
+    const pid = req.query.pid
+    try {        
+        const prodata = await Product.findOne({_id:pid})
+        // console.log(prodata); 
+        resp.render("single-product",{prodata:prodata,pid:pid})
+        
     } catch (error) {
         console.log(error);
     }
@@ -121,8 +124,12 @@ const Cart = require("../modal/carts")
 router.get("/add_cart",u_auth,async(req,resp)=>{
     const uid = req.user._id
     const pid = req.query.pid
+    // console.log(pid);
     try {
-        
+        const pdata = await Product.findOne({_id:pid})
+        const cart = new Cart({uid:uid,pid:pid,price:pdata.price,qty:1,total :pdata.price})    
+        await cart.save()
+        resp.send("Product add into cart")
     } catch (error) {
         console.log(error);
     }
