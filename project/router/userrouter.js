@@ -131,7 +131,6 @@ router.get("/add_cart",u_auth,async(req,resp)=>{
     }  
 })
 
-
 router.get("/cart",u_auth,async(req,resp)=>{
     const user = req.user
     // console.log(user);
