@@ -36,7 +36,7 @@
 		{
 			// alert(pid)
 			$.get("add_cart",{pid},function(rt){
-				alertr(rt)
+				location.reload()
 			})
 		}
 
@@ -86,7 +86,7 @@
 									<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
 										dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.</p>
 									<div class="add-bag d-flex align-items-center">
-										<a class="add-btn" href=""><span class="lnr lnr-cross"></span></a>
+										<a class="add-btn" href="cart"><span class="lnr lnr-cross"></span></a>
 										<span class="add-text text-uppercase">Add to Bag</span>
 									</div>
 								</div>
@@ -138,7 +138,7 @@
 									<h6>Rs : {{this.price}}</h6>									
 								</div>
 								<div class="prd-bottom">
-									<button onclick="addcart('{{this._id}}')" type="button" class="btn btn-outline-info  ti-bag hover-text">add to bag</button>																																				
+									<button onclick="addcart('{{this._id}}')" type="button" class="btn btn-outline-info  ti-bag hover-text"> Add to Cart</button>																																				
 								</div>
 							</div>
 						</div>						

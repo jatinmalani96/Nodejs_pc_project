@@ -36,7 +36,7 @@ router.get("/admin_logout",(req,resp)=>{
 })
 
 //------------------------------------Categoty-------------------------------
-const category  = require("../modal/caregoty")
+const category  = require("../modal/categorys")
 
 router.get("/admin_category",a_auth,async(req,resp)=>{
     try {
@@ -110,8 +110,11 @@ const upload = multer({
 
 router.get("/admin_product",a_auth,async(req,resp)=>{
     try {
-        const data = await product.find()
+        // const data = await product.find()
+        const data = await product.aggregate([{$lookup:{from:"categorys",localField:"catid",foreignField:"_id",as:"category"}}])
+        // console.log(data[0]);
         const catdata = await category.find()
+        // console.log(catdata[0]);
         resp.render("admin_product",{catdata : catdata,pdata:data})
     } catch (error) {
         console.log(error);

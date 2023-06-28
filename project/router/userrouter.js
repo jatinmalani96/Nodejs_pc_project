@@ -2,7 +2,7 @@ const router = require("express").Router()
 const User = require("../modal/user_reg")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
-const category = require("../modal/caregoty")
+const category = require("../modal/categorys")
 const u_auth = require("../middleware/user_auth")
 const Product = require("../modal/product")
 
@@ -117,10 +117,6 @@ router.get("/single-blog",(req,resp)=>{
 
 const Cart = require("../modal/carts")
 
-// router.get("/cart",(req,resp)=>{
-//     resp.render("cart")
-// })
-
 router.get("/add_cart",u_auth,async(req,resp)=>{
     const uid = req.user._id
     const pid = req.query.pid
@@ -132,8 +128,31 @@ router.get("/add_cart",u_auth,async(req,resp)=>{
         resp.send("Product add into cart")
     } catch (error) {
         console.log(error);
+    }  
+})
+
+
+router.get("/cart",u_auth,async(req,resp)=>{
+    const user = req.user
+    // console.log(user);
+    try {
+        const cartdata = await Cart.aggregate([{$match:{uid:user._id}},{$lookup:{from:"products",localField:"pid",foreignField:"_id",as:"product"}}])
+        // console.log(cartdata);
+        
+        resp.render("cart",{cartdata:cartdata})
+    } catch (error) {
+        
     }
-    
+})
+
+router.get("/remove_cart",u_auth,async(req,resp)=>{
+    try {
+        const pid = req.query.pid
+        await Cart.findByIdAndDelete(pid)
+        resp.send("okkkkk")
+    } catch (error) {
+        console.log(error);
+    }
 })
 
 module.exports=router

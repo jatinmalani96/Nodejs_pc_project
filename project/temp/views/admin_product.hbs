@@ -145,8 +145,10 @@
                                         </thead>
                                         <tbody>
                                             {{#each pdata}}
-                                            <tr>                              
-                                                <td class="text-dark">{{this.catid}}</td>
+                                            <tr>
+                                                {{#each this.category}}                              
+                                                <td class="text-dark">{{this.catname}}</td>
+                                                {{/each}}
                                                 <td class="text-dark">{{this.pname}}</td>
                                                 <td class="text-dark">{{this.price}}</td>
                                                 <td class="text-dark">{{this.qty}}</td>
