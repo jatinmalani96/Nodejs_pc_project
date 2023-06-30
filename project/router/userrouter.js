@@ -17,7 +17,7 @@ router.get("/",u_auth,async(req,resp)=>{
     }
 })
 
-// ------------------------------login/reg------------------------------------------
+// -----------------------------------------------login/reg----------------------------------------------------
 
 router.get("/login",(req,resp)=>{
     resp.render("login")
@@ -46,7 +46,7 @@ router.post("/do_login",async(req,resp)=>{
 
 router.get("/logout",(req,resp)=>{
     resp.clearCookie("ujwt")
-    resp.redirect("/",)
+    resp.redirect("/")
 })
 
 router.get("/registration",(req,resp)=>{
@@ -65,13 +65,15 @@ router.post("/do_ragister",async(req,resp)=>{
     }
 })
 
-// -----------------------------other-------------------------------------
+// -----------------------------------------------other----------------------------------------------------
 
 router.get("/category",u_auth,async(req,resp)=>{
    try {
     const catdata = await category.find(req.body)
+    const prodata = await Product.find()
+    // console.log(catdata);
     
-    resp.render("category",{catdata : catdata})
+    resp.render("category",{catdata : catdata,prodata:prodata})
    } catch (error) {
     
    }
@@ -113,7 +115,7 @@ router.get("/single-blog",(req,resp)=>{
     resp.render("single-blog")
 })
 
-// --------------------------carts-------------------
+// -----------------------------------------------carts----------------------------------------------------
 
 const Cart = require("../modal/carts")
 
@@ -122,10 +124,21 @@ router.get("/add_cart",u_auth,async(req,resp)=>{
     const pid = req.query.pid
     // console.log(pid);
     try {
+        const cartdata = await Cart.findOne({$and:[{pid:pid},{uid:uid}]})
         const pdata = await Product.findOne({_id:pid})
+        if (cartdata) {
+            var qty = cartdata.qty
+            qty++;
+            const price = qty * pdata.price
+            // console.log(price);
+            await Cart.findByIdAndUpdate(cartdata._id,{qty:qty,total:price})
+            resp.send("Product add into cart.....")
+        } else {
+        
         const cart = new Cart({uid:uid,pid:pid,price:pdata.price,qty:1,total :pdata.price})    
         await cart.save()
-        resp.send("Product add into cart")
+        resp.send("Product add into cart....")
+        }
     } catch (error) {
         console.log(error);
     }  
@@ -137,8 +150,13 @@ router.get("/cart",u_auth,async(req,resp)=>{
     try {
         const cartdata = await Cart.aggregate([{$match:{uid:user._id}},{$lookup:{from:"products",localField:"pid",foreignField:"_id",as:"product"}}])
         // console.log(cartdata);
-        
-        resp.render("cart",{cartdata:cartdata})
+        var sum = 0;
+        for (let i = 0; i < cartdata.length; i++) {
+            // console.log(cartdata[i].total);
+            sum = sum + cartdata[i].total
+        }
+        // console.log(sum);        
+        resp.render("cart",{cartdata:cartdata,sum:sum})
     } catch (error) {
         
     }
@@ -149,6 +167,30 @@ router.get("/remove_cart",u_auth,async(req,resp)=>{
         const pid = req.query.pid
         await Cart.findByIdAndDelete(pid)
         resp.send("okkkkk")
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+router.get("/changeQty",async(req,resp)=>{
+    try {
+        const cartid = req.query.cartid
+        const value = req.query.value
+
+        const cartdata = await Cart.findOne({_id:cartid})
+        // console.log(cartdata);
+        const pdata = await Product.findOne({_id:cartdata.pid})
+        var qty = cartdata.qty+Number(value)
+        if(qty == 0 ){
+            await Cart.findByIdAndDelete(cartid)
+            resp.send("updated")
+        }else{
+        var total = qty*pdata.price
+        await Cart.findByIdAndUpdate(cartid,{qty:qty,total:total})
+        resp.send("updated")
+        // console.log(cartid);
+        }
+
     } catch (error) {
         console.log(error);
     }

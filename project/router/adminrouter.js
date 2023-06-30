@@ -2,6 +2,7 @@ const router = require("express").Router()
 const admin = require("../modal/admins")
 const jwt = require("jsonwebtoken")
 const a_auth = require("../middleware/admin_auth")
+const u_user = require("../middleware/user_auth")
 
 router.get("/admin_login",(req,resp)=>{
     resp.render("admin_login")
@@ -146,7 +147,9 @@ router.get("/edit_product",async(req,resp)=>{
     try {
         const id = req.query.pid
         const proddata = await product.findOne({_id:id})
-        resp.render("admin_edit_product",{proddata : proddata})
+        const catdata = await category.find()
+        // console.log(proddata);
+        resp.render("admin_edit_product",{proddata : proddata,catdata:catdata})
        
     } catch (error) {
         console.log(error);
@@ -155,12 +158,38 @@ router.get("/edit_product",async(req,resp)=>{
 
 // router.post("/update_product",async(req,resp)=>{
 //     try {
-//         const id = req.body._id
+//         const id = req.body.id
 //         console.log(id);
+//         // await category.findByIdAndUpdate(id,req.body)
 //     } catch (error) {
 //         console.log(error);
 //     }
 // })
 
+// -----------------------------------users---------------------------------
+
+const User = require("../modal/user_reg")
+
+router.get("/user",async(req,resp)=>{
+    try {
+        const user = await User.find()
+        // console.log(user);
+        resp.render("user",{user:user})
+    } catch (error) {
+        console.log(error);
+    }
+})
+
+const Cart = require("../modal/carts")
+
+router.get("/a_cart",async(req,resp)=>{
+    try {
+        const cartdata = await Cart.aggregate()
+        console.log(cartdata);
+        resp.render("user",)
+    } catch (error) {
+        console.log(error);
+    }
+})
 
 module.exports=router
