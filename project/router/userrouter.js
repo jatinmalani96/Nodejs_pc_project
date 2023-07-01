@@ -65,6 +65,7 @@ router.post("/do_ragister",async(req,resp)=>{
     }
 })
 
+//---------------------------------------------------------------------------------------------------------
 // -----------------------------------------------other----------------------------------------------------
 
 router.get("/category",u_auth,async(req,resp)=>{
@@ -158,7 +159,7 @@ router.get("/cart",u_auth,async(req,resp)=>{
         // console.log(sum);        
         resp.render("cart",{cartdata:cartdata,sum:sum})
     } catch (error) {
-        
+        console.log(error);
     }
 })
 
@@ -196,4 +197,25 @@ router.get("/changeQty",async(req,resp)=>{
     }
 })
 
+//------------------------------------------------ Payment ---------------------------------------//
+const Razorpay = require("razorpay")
+
+router.get("/payment",(req,resp)=>{
+
+    const amt = req.query.amt
+    var instance = new Razorpay({
+        key_id: 'rzp_test_SfX01IJ3wLwTsZ',
+        key_secret: 'pxOiUrLB1atPzNP1nsiaLCEy',
+      });
+// console.log(amt);
+      var options = {
+        amount: Number(amt)*100,  // amount in the smallest currency unit
+        currency: "INR",
+        receipt: "order_rcptid_11"
+      };
+      instance.orders.create(options, function(err, order) {
+        resp.send(order)
+      });
+
+})
 module.exports=router

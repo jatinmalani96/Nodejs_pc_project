@@ -136,7 +136,7 @@
                                     <h5>Subtotal</h5>
                                 </td>
                                 <td>
-                                    <h5>Rs.{{sum}}</h5>
+                                    <h5 id="amt">{{sum}}</h5>
                                 </td>
                             </tr>
                             <tr class="shipping_area">
@@ -186,7 +186,7 @@
                                 <td>
                                     <div class="checkout_btn_inner d-flex align-items-center">
                                         <a class="gray_btn" href="/">Continue Shopping</a>
-                                        <a class="primary-btn" href="#">Proceed to checkout</a>
+                                        <a class="primary-btn" href="#" id="rzp-button1">Proceed to checkout</a>
                                     </div>
                                 </td>
                             </tr>
@@ -295,6 +295,63 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCjCGmQ0Uq4exrzdcL6rvxywDDOvfAu6eE"></script>
 	<script src="js/gmaps.min.js"></script>
 	<script src="js/main.js"></script>
+
+
+
+
+
+    {{!-- ------------------------------------------------------ Payment -------------------------------------- --}}
+
+<button id="rzp-button1">Pay with Razorpay</button>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+
+// var rzp1 = new Razorpay(options);
+document.getElementById('rzp-button1').onclick = function(e){
+    e.preventDefault();
+
+    const amt = document.getElementById("amt").textContent
+    fetch("http://127.0.0.1:3000/payment?amt="+amt).then(data=>{
+        return data.json()
+    }).then(result=>{
+
+        var options = {
+    "key": "rzp_test_SfX01IJ3wLwTsZ", // Enter the Key ID generated from the Dashboard
+    "amount": result.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+    "currency": "INR",
+    "name": "Acme Corp",
+    "description": "Test Transaction",
+    "image": "https://example.com/your_logo",
+    "order_id": result.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    "handler": function (response){
+        alert(response.razorpay_payment_id);
+        alert(response.razorpay_order_id);
+        alert(response.razorpay_signature)
+    },
+    "prefill": {
+        "name": "Gaurav Kumar",
+        "email": "gaurav.kumar@example.com",
+        "contact": "9000090000"
+    },
+    "notes": {
+        "address": "Razorpay Corporate Office"
+    },
+    "theme": {
+        "color": "#3399cc"
+    }
+};
+var rzp1 = new Razorpay(options);
+
+    rzp1.open();
+
+    }).catch(err=>{
+        console.log(err);
+    })
+
+}
+</script>
+
+
 </body>
 
 </html>
