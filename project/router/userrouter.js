@@ -7,7 +7,7 @@ const u_auth = require("../middleware/user_auth")
 const Product = require("../modal/product")
 
 
-router.get("/",u_auth,async(req,resp)=>{
+router.get("/",async(req,resp)=>{
     try {
         const prodata = await Product.find()
         // console.log(prodata);
@@ -167,7 +167,7 @@ router.get("/remove_cart",u_auth,async(req,resp)=>{
     try {
         const pid = req.query.pid
         await Cart.findByIdAndDelete(pid)
-        resp.send("okkkkk")
+        resp.send()
     } catch (error) {
         console.log(error);
     }
@@ -197,8 +197,17 @@ router.get("/changeQty",async(req,resp)=>{
     }
 })
 
-//------------------------------------------------ Payment ---------------------------------------//
+//------------------------------------------------ Payment / Email ---------------------------------------//
+const Order = require("../modal/orders")
+var nodemailer = require('nodemailer');
 const Razorpay = require("razorpay")
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'jpatel.j17@gmail.com',
+      pass: 'mnfonatsbdquzqpl'
+    }
+  });
 
 router.get("/payment",(req,resp)=>{
 
@@ -216,6 +225,64 @@ router.get("/payment",(req,resp)=>{
       instance.orders.create(options, function(err, order) {
         resp.send(order)
       });
-
 })
+
+router.get("/confirmorder",u_auth,async(req,resp)=>{
+    try {
+        const payid = req.query.pid
+        const uid = req.user._id
+        
+        // var productlist = []
+        var alltotal = 0;
+        var row = 0
+        const cartProd = await Cart.find({uid:uid})
+
+        for (let i = 0; i < cartProd.length; i++) {
+            const prod = await Product.findOne({_id:cartProd[i].pid})
+            
+            var pname = prod.pname
+            var price = prod.price
+            var qty = cartProd[i].qty
+            var total = Number(price)*Number(qty)
+            
+           var productlist=[{
+                pname : pname,
+                price : price,
+                qty : qty,
+                total : total
+            }]
+            alltotal = alltotal+total
+            row = row+"<tr><td>"+pname+"</td><td>"+price+"</td><td>"+qty+"</td><td>"+total+"</td></tr>"
+        }
+        // console.log(productlist);
+        const order = new Order({
+            uid : uid,
+            payid : payid,
+            product : productlist,
+            total : alltotal
+        })
+        // console.log(order);
+        await order.save()
+        
+
+        var mailOptions = {
+            from: 'jpatel.j17@gmail.com',
+            to: req.user.email,
+            subject: 'Sending Email using Node.js',
+            html : "<table border='1'><tr<th>Product Name</th><th>Price</th><th>qty</th><th>Total</th></tr>"+row+"<tr><td>AllTotal</td><td>"+alltotal+"</td></tr></table>"
+          };
+          
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              console.log(error);
+            } else {
+                resp.send("Order confirmed......")
+            }
+          });
+
+    } catch (error) {
+        console.log(error);
+    }
+})
+
 module.exports=router
